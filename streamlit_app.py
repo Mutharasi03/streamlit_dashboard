@@ -32,6 +32,7 @@ selected = option_menu(
     options=["Dataset Description","Assumptions","Exploratory data analysis","model"],
     icons=["file-earmark-excel-fill","asterisk","pie-chart-fill","modem"],
     default_index=0,
+    orientation="horizontal"
 )
 
 
