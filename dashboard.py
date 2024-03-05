@@ -5,7 +5,7 @@ import pandas as pd
 import streamlit as st
 import numpy as np
 #import seaborn as sns
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 from streamlit_option_menu import option_menu
 from streamlit_card import card
 import plotly.express as px
