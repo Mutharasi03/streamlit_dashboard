@@ -8,11 +8,11 @@ import numpy as np
 #import matplotlib.pyplot as plt
 #from streamlit_option_menu import option_menu
 #from streamlit_card import card
-import plotly.express as px
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report, accuracy_score
-from sklearn.preprocessing import LabelEncoder
+# import plotly.express as px
+# from sklearn.model_selection import train_test_split
+# from sklearn.ensemble import RandomForestClassifier
+# from sklearn.metrics import classification_report, accuracy_score
+# from sklearn.preprocessing import LabelEncoder
 st.set_option('deprecation.showPyplotGlobalUse', False)
 # Set page title and favicon
 st.set_page_config(
