@@ -23,7 +23,7 @@ st.set_page_config(
 
 # dashboard title
 st.markdown("<h2 style='text-align: center'>ROAD ACCIDENT</h2><hr style='height:2px;border-width:0;color:gray;background-color:gray'>", unsafe_allow_html=True)
-df=pd.read_csv(r"C:\Users\Gaming3\Documents\DATA_SETS\RTA_Dataset.csv")
+df=pd.read_csv("RTA_Dataset.csv")
 
 df1=df.drop(['Accident_severity'],axis=1)
 selected = option_menu(
