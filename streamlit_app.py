@@ -6,6 +6,7 @@ import streamlit as st
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
+import pyarrow as pa
 from streamlit_option_menu import option_menu
 import plotly.express as px
 from sklearn.model_selection import train_test_split
