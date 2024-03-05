@@ -25,7 +25,7 @@ st.markdown("<h2 style='text-align: center'>ROAD ACCIDENT</h2><hr style='height:
 #df=pd.read_csv("RTA_Dataset.csv")
 @st.cache
 def get_data_from_csv():
-    df = pd.read_csv("your_data.csv")
+    df = pd.read_csv("RTA_Dataset.csv")
     # Preprocess data if needed
     return df
 
