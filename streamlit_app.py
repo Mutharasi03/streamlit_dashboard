@@ -373,6 +373,9 @@ if selected == "model":
 
         label_mapping = dict(zip(le.classes_, le.transform(le.classes_)))
 
+        st.subheader('Label mapping:')
+        st.write(label_mapping)
+
     from sklearn.preprocessing import LabelEncoder
     LE = LabelEncoder()
     df1=df1.apply(LE.fit_transform)
@@ -412,9 +415,5 @@ if selected == "model":
     # Display the classification report as a table
     st.write("Classification Report:")
     st.table(rep)
-    
-
-        st.subheader('Label mapping:')
-        st.write(label_mapping)
 
 
