@@ -5,14 +5,19 @@ import pandas as pd
 import streamlit as st
 import numpy as np
 import seaborn as sns
+import scipy.stats as ss
 import matplotlib.pyplot as plt
-import pyarrow as pa
 from streamlit_option_menu import option_menu
+from streamlit_card import card
 import plotly.express as px
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, accuracy_score
 from sklearn.preprocessing import LabelEncoder
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import precision_score, recall_score,f1_score
+
 st.set_option('deprecation.showPyplotGlobalUse', False)
 # Set page title and favicon
 st.set_page_config(
@@ -23,10 +28,10 @@ st.set_page_config(
 
 # dashboard title
 st.markdown("<h2 style='text-align: center'>ROAD ACCIDENT</h2><hr style='height:2px;border-width:0;color:gray;background-color:gray'>", unsafe_allow_html=True)
-
-df=pd.read_csv(r"dataset.csv")
+df=pd.read_csv(r"C:\Users\Gaming3\Documents\DATA_SETS\RTA_Dataset.csv")
 
 df1=df.drop(['Accident_severity'],axis=1)
+
 selected = option_menu(
     menu_title=None,
     options=["Dataset Description","Assumptions","Exploratory data analysis","model"],
@@ -43,9 +48,9 @@ if selected == "Dataset Description":
 This data set is collected from Addis Ababa Sub city police departments for Masters research work.
 The data set has been prepared from manual records of road traffic accident of the year 2017-20. All the sensitive information have been excluded during data encoding and finally it has 32 features and 12316 instances of the accident.""")
         table_data = [
-        ["Time:","The time of day when the accident occurred"],
-       ["Day_of_week:"," The day of the week when the accident occurred."]
-       ,["Age_band_of_driver:"," The age group or band of the driver involved in the accident."]
+ ["Time:","The time of day when the accident occurred"]
+,["Day_of_week:"," The day of the week when the accident occurred."]
+,["Age_band_of_driver:"," The age group or band of the driver involved in the accident."]
 ,["Sex_of_driver:"," The gender of the driver involved in the accident."]
 ,["Educational_level:"," The educational level of the driver involved in the accident."]
 ,["Vehicle_driver_relation:"," The relationship of the driver to the vehicle (e.g., owner, renter)."]
@@ -113,6 +118,7 @@ if selected == "Assumptions":
     st.markdown("<h5> #Assumption 11</h5>", unsafe_allow_html=True)
     st.write("causality_serverity ,fitness_of_casuality and cause_of_accident helps in determining the accident severity.")
     st.divider()
+
 if selected == "Exploratory data analysis":
     st.markdown("<h5> EDA for Road accident dataset</h5>", unsafe_allow_html=True)
     
@@ -123,7 +129,7 @@ This app retrieves the list of the **road accident** (from kaggle)
 """)
 
     
-    df=pd.read_csv(r"dataset.csv")
+    df=pd.read_csv(r"C:\Users\Gaming3\Documents\DATA_SETS\RTA_Dataset.csv")
     
     df.head(5)
     
@@ -167,6 +173,7 @@ This app retrieves the list of the **road accident** (from kaggle)
     A =df.groupby(["Light_conditions"])["Accident_severity"].agg(["count"])
     B = A.sort_values(by='count',ascending=False).reset_index()
 
+#tabs for Univariate, bivariate and Insight
     uni,bi,insight= st.tabs(["Univariate analysis", "Bivariate analysis","insight"])
 
     with uni:
@@ -317,103 +324,105 @@ This app retrieves the list of the **road accident** (from kaggle)
            The percentage of total accidents decreases as the age band increases, suggesting that younger drivers are more likely to be involved in accidents than older drivers.
            The number of vehicles involved in the accident decreases as the severity of the accident increases, which may be due to the fact that more serious accidents are more likely to involve fewer vehicles.""")
 
-# if selected == "Model":
-#     st.title(f"you have selected {selected}")
-    
-#     categorical_columns = df.select_dtypes(include=['object']).columns
-#     df1.drop(labels=["Time","Day_of_week", "Educational_level", "Vehicle_driver_relation","Number_of_casualties",
-#                 "Owner_of_vehicle", "Area_accident_occured", "Work_of_casuality","Fitness_of_casuality","Age_band_of_casualty",
-#                 "Casualty_class", "Sex_of_casualty",'Road_surface_conditions','Service_year_of_vehicle','Age_band_of_driver','Road_allignment','Casualty_severity'], axis=1, inplace=True)
-
-#     numerical_columns = df1.select_dtypes(include=['int64', 'float64']).columns
-#     categorical_columns = df1.select_dtypes(include=['object']).columns
-
-#     for column in numerical_columns:
-#         df1[column].fillna(df1[column].mean(), inplace=True)
-
-#     for column in categorical_columns:
-#         df1[column].fillna(df1[column].mode()[0], inplace=True)
-
-#     from sklearn.preprocessing import LabelEncoder
-#     le = LabelEncoder()
-#     df['encoded_attribute'] = le.fit_transform(df['Accident_severity'])
-
-#     st.write('DataFrame after label encoding:')
-#     st.write(df)
-
-#     label_mapping = dict(zip(le.classes_, le.transform(le.classes_)))
-
-#     st.write('Label mapping:')
-#     st.write(label_mapping)
 
 if selected == "model":
-
     
-    categorical_columns = df.select_dtypes(include=['object']).columns
-    df1.drop(labels=["Time","Day_of_week", "Educational_level", "Vehicle_driver_relation","Number_of_casualties",
-                "Owner_of_vehicle", "Area_accident_occured", "Work_of_casuality","Fitness_of_casuality","Age_band_of_casualty",
-                "Casualty_class", "Sex_of_casualty",'Road_surface_conditions','Service_year_of_vehicle','Age_band_of_driver','Road_allignment','Casualty_severity'], axis=1, inplace=True)
+    numerical = df.select_dtypes(include=['int64']).columns
+    categorical= df.select_dtypes(include=['object']).columns
 
-    numerical_columns = df1.select_dtypes(include=['int64', 'float64']).columns
-    categorical_columns = df1.select_dtypes(include=['object']).columns
 
-    for column in numerical_columns:
-        df1[column].fillna(df1[column].mean(), inplace=True)
+    for column in numerical:
+        df[column].fillna(df[column].mean(), inplace=True)
 
-    for column in categorical_columns:
+    for column in categorical:
+        df[column].fillna(df[column].mode()[0], inplace=True)
+
+    df1=df.drop(['Number_of_vehicles_involved','Number_of_casualties'],axis=1)
+
+    for column in df1:
         df1[column].fillna(df1[column].mode()[0], inplace=True)
 
-    from sklearn.preprocessing import LabelEncoder
+    st.subheader("Accident severity")
+
+    v1=pd.crosstab(df1['Accident_severity'],df1['Sex_of_driver'],margins=True,margins_name='subtotal')
+    v1
+
+    # st.write(df)
+    df2=df.drop(labels=["Educational_level", "Vehicle_driver_relation","Number_of_casualties","Age_band_of_casualty","Sex_of_driver",	"Driving_experience",	"Type_of_vehicle",
+                    "Owner_of_vehicle", "Area_accident_occured", "Work_of_casuality","Fitness_of_casuality",'Cause_of_accident','Lanes_or_Medians',
+                    'Vehicle_movement','Defect_of_vehicle','Service_year_of_vehicle','Owner_of_vehicle',
+                    "Casualty_class", "Sex_of_casualty",'Road_surface_conditions','Service_year_of_vehicle','Road_allignment','Casualty_severity','Accident_severity'], axis=1, inplace=True)
+
+    # st.write(df)
+
+
     le = LabelEncoder()
-    df['encoded_attribute'] = le.fit_transform(df['Accident_severity'])
-    
-    if selected == "model":
-        st.subheader('DataFrame after label encoding:')
-        st.write(df)
 
-        label_mapping = dict(zip(le.classes_, le.transform(le.classes_)))
+    df['encoded_attribute'] = le.fit_transform(df1['Accident_severity'])
 
-        st.subheader('Label mapping:')
-        st.write(label_mapping)
+    label_mapping = dict(zip(le.classes_, le.transform(le.classes_)))
 
-    from sklearn.preprocessing import LabelEncoder
     LE = LabelEncoder()
-    df1=df1.apply(LE.fit_transform)
-    st.write(df1)
+    df3=df.apply(LE.fit_transform)
+    st.subheader("DataFrame after label encoding:")
+    st.write(df3)
 
-    from sklearn.model_selection import train_test_split
-    from sklearn.ensemble import RandomForestClassifier
-    from sklearn.metrics import classification_report, accuracy_score
+    st.subheader('Label mapping:')
+    st.write(label_mapping)
 
 
-    # Assuming 'target_column' is your target variable
-    X = df1 # Features
-    y = df['Accident_severity']  # Target variable
 
-    # Perform train-test split
+    X = df3 # Features
+    y = df['encoded_attribute']  # Target variable
+
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-    # 2. Model Training
-    # Initialize Random Forest Classifier
     rf_classifier = RandomForestClassifier(n_estimators=100, random_state=42)
 
-    # Fit the model to the training data
     rf_classifier.fit(X_train, y_train)
 
-    # 3. Model Evaluation
-    # Predict on the testing set
     y_pred = rf_classifier.predict(X_test)
 
-    # Evaluate the model
     st.write("Accuracy:", accuracy_score(y_test, y_pred))
-    # st.write("Classification Report:")
-    # st.table(classification_report(y_test, y_pred))
-
-    report = classification_report(y_test, y_pred, output_dict=True)
-    rep = pd.DataFrame(report).transpose()
-
-    # Display the classification report as a table
-    st.write("Classification Report:")
-    st.table(rep)
 
 
+# Train a logistic regression model using the selected features
+    logreg = LogisticRegression(max_iter=1000)  
+    logreg.fit(X_train, y_train)
+
+    y_pred_logreg = logreg.predict(X_test)
+
+    # Calculate accuracy
+    accuracy_logreg = accuracy_score(y_test, y_pred_logreg)
+
+    st.write("Accuracy of logistic regression model:", accuracy_logreg)
+
+    from sklearn.metrics import confusion_matrix
+
+# Calculate confusion matrix
+    conf_matrix = confusion_matrix(y_test, y_pred)
+
+    conf_matrix_df = pd.DataFrame(conf_matrix, index=range(conf_matrix.shape[0]), columns=range(conf_matrix.shape[1]))
+
+    plt.figure(figsize=(6, 4))
+    sns.heatmap(conf_matrix_df, annot=True, fmt="d", cmap="Blues")
+    plt.title("Confusion Matrix")
+    plt.xlabel("Predicted labels")
+    plt.ylabel("True labels")
+
+    st.pyplot(plt, clear_figure=True)
+
+    # st.write(df1.groupby('Accident_severity').apply(len))
+
+
+    # Calculate precision
+    precision = precision_score(y_test, y_pred,average='weighted')
+
+    # Calculate recall
+    recall = recall_score(y_test, y_pred,average='weighted')
+    # F1 score
+    f1_score=f1_score(y_test,y_pred,average='weighted')
+
+    st.write("Precision:", precision)
+    st.write("Recall:", recall)
+    st.write("F1 Score:",f1_score)
