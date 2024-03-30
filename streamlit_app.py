@@ -8,7 +8,7 @@ import seaborn as sns
 import scipy.stats as ss
 import matplotlib.pyplot as plt
 from streamlit_option_menu import option_menu
-from streamlit_card import card
+# from streamlit_card import card
 import plotly.express as px
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
