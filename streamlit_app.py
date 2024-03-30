@@ -129,9 +129,9 @@ This app retrieves the list of the **road accident** (from kaggle)
 """)
 
     
-    df=pd.read_csv(r"C:\Users\Gaming3\Documents\DATA_SETS\RTA_Dataset.csv")
+    # df=pd.read_csv(r"C:\Users\Gaming3\Documents\DATA_SETS\RTA_Dataset.csv")
     
-    df.head(5)
+    # df.head(5)
     
     
 
