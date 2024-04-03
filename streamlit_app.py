@@ -346,7 +346,7 @@ if selected == "model":
     st.subheader("Accident severity")
 
     v1=pd.crosstab(df1['Accident_severity'],df1['Sex_of_driver'],margins=True,margins_name='subtotal')
-    v1
+    #v1
 
     # st.write(df)
     df2=df.drop(labels=["Educational_level", "Vehicle_driver_relation","Number_of_casualties","Age_band_of_casualty","Sex_of_driver",	"Driving_experience",	"Type_of_vehicle",
@@ -396,7 +396,7 @@ if selected == "model":
     # Calculate accuracy
     accuracy_logreg = accuracy_score(y_test, y_pred_logreg)
 
-    st.write("Accuracy of logistic regression model:", accuracy_logreg)
+   # st.write("Accuracy of logistic regression model:", accuracy_logreg)
 
     from sklearn.metrics import confusion_matrix
 
