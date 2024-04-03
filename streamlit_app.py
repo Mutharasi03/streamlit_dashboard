@@ -343,7 +343,7 @@ if selected == "model":
     for column in df1:
         df1[column].fillna(df1[column].mode()[0], inplace=True)
 
-    st.subheader("Accident severity")
+    # st.subheader("Accident severity")
 
     v1=pd.crosstab(df1['Accident_severity'],df1['Sex_of_driver'],margins=True,margins_name='subtotal')
     #v1
